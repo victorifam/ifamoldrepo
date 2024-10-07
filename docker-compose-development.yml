@@ -1,0 +1,117 @@
+version: '3.7'
+services:
+  #------- pgsql -------#
+  pgsql:
+    container_name: pgsql
+    image: postgres:12.4
+    ports: 
+    - "55432:5432"
+    environment: 
+      POSTGRES_PASSWORD: ingresso
+      POSTGRES_DB: ingresso
+      POSTGRES_USER: chef  
+      POSTGRES_SINGLE_USER: ingresso
+      POSTGRES_SINGLE_USER_PASSWORD: ingresso
+      TZ: America/Sao_Paulo    
+    volumes:
+    - './docker/init:/docker-entrypoint-initdb.d'
+    - './.docker/development/pg_data:/var/lib/postgresql/data'
+
+  #------- pgadmin -------#	  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'sistemas@ifam.edu.br'
+      PGADMIN_DEFAULT_PASSWORD: 'sistemas'
+    ports:
+      - 9080:80
+    depends_on:
+      - pgsql
+    links:
+      - pgsql
+  
+  #------- candidato -------#
+  candidato:
+    container_name: candidato    
+    build:
+        context: '.'    
+        target: 'development'    
+    depends_on:
+    - pgsql                
+    environment: 
+      PHP_EXTENSION_XDEBUG: 1                  
+    ports:
+    - "8823:8000"
+    volumes:    
+    - './src-candidato:/var/www'
+    working_dir: /var/www
+    links:
+    - pgsql
+    dns:
+    - 8.8.8.8
+    - 9.9.9.9
+    command: /bin/sh -c "composer install && php artisan migrate --database=pgsql-chef && php artisan db:seed && php artisan serve --host 0.0.0.0 && php artisan queue:work --sleep=3 --tries=3 --max-time=3600"
+  
+  #------- chrome -------#
+  chrome:
+    container_name: chrome
+    image: selenium/node-chrome:4.0.0-rc-2-prerelease-20210908
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - NOVNC=true
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - NO_VNC_PORT=7900
+    ports:
+      - "6900:5900"
+      - "7900:7900"
+
+  #------- edge -------#
+  edge:
+    container_name: edge
+    image: selenium/node-edge:4.0.0-rc-2-prerelease-20210908
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - NOVNC=true
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - NO_VNC_PORT=7901
+    ports:
+      - "6901:5900"
+      - "7901:7900"
+
+  #------- firefox -------#
+  firefox:
+    container_name: firefox
+    image: selenium/node-firefox:4.0.0-rc-2-prerelease-20210908
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - NOVNC=true
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - NO_VNC_PORT=7902
+    ports:
+      - "6902:5900"
+      - "7902:7900"
+
+  #------- selenium-hub -------#
+  selenium-hub:
+    container_name: selenium-hub
+    image: selenium/hub:4.0.0-rc-2-prerelease-20210908
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+    links:
+    - candidato

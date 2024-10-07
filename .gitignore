@@ -1,0 +1,22 @@
+# Ignorar o arquivo .env
+.env
+
+# Ignorar o diretório postgres-data
+/postgres-data
+
+# Ignorar todos os arquivos e diretórios dentro do diretório .docker/
+.docker/*
+
+# Ignorar backups
+*.backup
+*.bkp
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar arquivos temporários
+*.tmp
+*.temp
+
+# Igonorar arquivos dentro do diretório ssl no nginx
+docker/nginx/ssl/*

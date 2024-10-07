@@ -1,0 +1,83 @@
+version: '3.7'
+services:
+
+  #------- postgres -------#
+  pgsql:
+    container_name: pgsql
+    image: postgres:12.4
+    ports: 
+      - "55432:5432"
+    environment: 
+      POSTGRES_PASSWORD: ingresso
+      POSTGRES_DB: ingresso
+      POSTGRES_USER: chef  
+      POSTGRES_SINGLE_USER: ingresso
+      POSTGRES_SINGLE_USER_PASSWORD: ingresso
+      TZ: America/Sao_Paulo    
+    volumes:
+    - ./docker/init:/docker-entrypoint-initdb.d
+    - ./.docker/production/pg_data:/var/lib/postgresql/data
+    networks:
+      - network_candidato
+
+  #------- pgadmin -------#	  
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'sistemas@ifam.edu.br'
+      PGADMIN_DEFAULT_PASSWORD: 'sistemas'
+    ports:
+      - 9080:80
+    networks:
+      - network_candidato
+    depends_on:
+      - pgsql
+
+  #------- redis -------#
+  redis:
+    image: redis
+    container_name: redis
+    restart: unless-stopped
+    networks:
+      - network_candidato
+    ports:
+      - "6379:6379"
+    depends_on:
+      - candidato
+
+  #------- nginx -------#
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - network_candidato
+    volumes:
+      - ./docker/nginx/conf/:/etc/nginx/conf.d
+      - ./docker/nginx/ssl:/etc/nginx/ssl
+      - ./src-candidato:/var/www
+
+  #------- candidato -------#
+  candidato:
+    container_name: candidato   
+    build:
+        context: '.' 
+        target: 'production'                 
+    restart: always
+    volumes:    
+      - ./src-candidato:/var/www
+    working_dir: /var/www
+    depends_on:
+      - pgsql
+    networks:
+      - network_candidato
+ 
+#------- networks -------#
+networks:
+  network_candidato:
+    driver: bridge

@@ -1,0 +1,58 @@
+variables:      
+    DOCKER_DRIVER: overlay2    
+    DOCKER_TLS_CERTDIR: ""     
+    POSTGRES_PASSWORD: ingresso
+    POSTGRES_DB: ingresso
+    POSTGRES_USER: chef
+
+test:1.0:
+  image: tiagoheineckifc/php7.4-cli:base
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - src-candidato/vendor/  
+  services:
+  - name: postgres:12.4
+    alias: dbtest
+  before_script:  
+  - apt-get update -qq
+  - apt-get install -y -qq git unzip wget
+  - wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+  - echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | tee  /etc/apt/sources.list.d/pgdg.list  
+  - apt-get update -qq
+  - apt-get install -y -qq postgresql-client-12
+  - export PGPASSWORD='ingresso'
+  - psql -h dbtest -U chef -d ingresso -f .docker/init.sql  
+  script:  
+  - apt install git unzip  
+  - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer    
+  - cd src-candidato  
+  - composer install        
+  - php artisan migrate:fresh --database=pgsql-chef  --seed --force
+  - php artisan test --testsuite=Unit
+  - php artisan test --testsuite=Feature --exclude loginantigo,loginunico,desativado
+  only:
+  - master
+  
+staging:2.0:
+    image: docker:20.10.14-dind
+    cache:
+      key: ${CI_COMMIT_REF_SLUG}      
+    services: 
+    - docker:20.10.14-dind        
+    before_script:
+    - docker info
+    - apk update
+    - apk upgrade
+    - apk add --no-cache docker-compose
+    script:    
+    - docker-compose -f docker-compose-staging.yml build --force           
+    - docker-compose -f docker-compose-staging.yml up -d
+    - docker-compose -f docker-compose-staging.yml exec -T candidato psql -h postgres -U chef -d ingresso -f /.docker/init.sql
+    - docker-compose -f docker-compose-staging.yml exec -T candidato composer install --no-dev --prefer-dist     
+    - docker-compose -f docker-compose-staging.yml exec -T candidato php artisan view:clear
+    - docker-compose -f docker-compose-staging.yml exec -T candidato php artisan config:clear
+    - docker-compose -f docker-compose-staging.yml exec -T candidato php artisan config:cache
+    - docker-compose -f docker-compose-staging.yml exec -T candidato php artisan migrate --database=pgsql-chef --force    
+    only:    
+    - master

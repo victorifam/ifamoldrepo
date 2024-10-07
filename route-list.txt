@@ -1,0 +1,112 @@
++--------+-----------+---------------------------------------------------------------------+-------------------------------------------------
+| Teste  | Method    | URI                                                                 | Name                                            
++--------+-----------+---------------------------------------------------------------------+-------------------------------------------------
+|        | GET|HEAD  | admin/notices/{notice}/resources                                    | admin.notices.resources.index                   
+|        | POST      | admin/notices/{notice}/resources                                    | admin.notices.resources.store                   
+|        | GET|HEAD  | admin/notices/{notice}/resources/create                             | admin.notices.resources.create                  
+|        | GET|HEAD  | admin/notices/{notice}/resources/{resource}                         | admin.notices.resources.show                    
+|        | PUT|PATCH | admin/notices/{notice}/resources/{resource}                         | admin.notices.resources.update                  
+|        | DELETE    | admin/notices/{notice}/resources/{resource}                         | admin.notices.resources.destroy                 
+|        | GET|HEAD  | admin/notices/{notice}/resources/{resource}/edit                    | admin.notices.resources.edit                    
+|        | GET|HEAD  | admin/notices/{notice}/subscriptions                                | admin.notices.subscriptions.index               
+|        | POST      | admin/notices/{notice}/subscriptions                                | admin.notices.subscriptions.store               
+|        | GET|HEAD  | admin/notices/{notice}/subscriptions/create                         | admin.notices.subscriptions.create              
+|        | GET|HEAD  | admin/notices/{notice}/subscriptions/{subscription}                 | admin.notices.subscriptions.show                
+|        | PUT|PATCH | admin/notices/{notice}/subscriptions/{subscription}                 | admin.notices.subscriptions.update              
+|        | DELETE    | admin/notices/{notice}/subscriptions/{subscription}                 | admin.notices.subscriptions.destroy             
+|        | PUT       | admin/notices/{notice}/subscriptions/{subscription}/cancel          | admin.notices.subscriptions.cancel              
+|        | GET|HEAD  | admin/notices/{notice}/subscriptions/{subscription}/edit            | admin.notices.subscriptions.edit                
+|        | PUT       | admin/notices/{notice}/subscriptions/{subscription}/homologate      | admin.notices.subscriptions.homologate          
+|        | POST      | candidate/subscription/{subscription}/request-resource              | candidate.subscription.request-resource    
+|        | GET|HEAD  | manager                                                             | manager.index                                   
+|        | GET|HEAD  | register                                                            | register                                        
+|        | POST      | reset-password                                                      | password.update                                 
+|        | GET|HEAD  | admin/notices/{notice}/total-by-affirmative-actions/report          | admin.notices.totalByAffirmativeActions.report  
+|        | GET|HEAD  | admin/notices/{notice}/total-subscriptions/report                   | admin.notices.totalSubscriptions.report         
+|  OK    | GET|HEAD  | admin/notices/{notice}/total-candidates-by-cities/report            | admin.notices.totalCandidatesByCities.report    
+|  OK    | GET|HEAD  | /                                                                   |                                                 
+|  OK    | POST      | admin/affirmative-actions                                           | admin.affirmative-actions.store                 
+|  OK    | GET|HEAD  | admin/affirmative-actions                                           | admin.affirmative-actions.index                 
+|  OK    | GET|HEAD  | admin/affirmative-actions/create                                    | admin.affirmative-actions.create                
+|  OK    | PUT|PATCH | admin/affirmative-actions/{affirmative_action}                      | admin.affirmative-actions.update                
+|  OK    | DELETE    | admin/affirmative-actions/{affirmative_action}                      | admin.affirmative-actions.destroy               
+|  OK    | GET|HEAD  | admin/affirmative-actions/{affirmative_action}/edit                 | admin.affirmative-actions.edit                  
+|  OK    | GET|HEAD  | admin/campuses                                                      | admin.campuses.index                            
+|  OK    | POST      | admin/campuses                                                      | admin.campuses.store                            
+|  OK    | GET|HEAD  | admin/campuses/create                                               | admin.campuses.create                           
+|  OK    | PUT|PATCH | admin/campuses/{campus}                                             | admin.campuses.update                           
+|  OK    | DELETE    | admin/campuses/{campus}                                             | admin.campuses.destroy                          
+|  OK    | GET|HEAD  | admin/campuses/{campus}/edit                                        | admin.campuses.edit                             
+|  OK    | POST      | admin/courses                                                       | admin.courses.store                             
+|  OK    | GET|HEAD  | admin/courses                                                       | admin.courses.index                             
+|  OK    | GET|HEAD  | admin/courses/create                                                | admin.courses.create                            
+|  OK    | GET|HEAD  | admin/courses/{course}                                              | admin.courses.show                              
+|  OK    | PUT|PATCH | admin/courses/{course}                                              | admin.courses.update                            
+|  OK    | DELETE    | admin/courses/{course}                                              | admin.courses.destroy                           
+|  OK    | GET|HEAD  | admin/courses/{course}/edit                                         | admin.courses.edit                              
+|  OK    | POST      | admin/modalities                                                    | admin.modalities.store                          
+|  OK    | GET|HEAD  | admin/modalities                                                    | admin.modalities.index                          
+|  OK    | GET|HEAD  | admin/modalities/create                                             | admin.modalities.create                         
+|  OK    | DELETE    | admin/modalities/{modality}                                         | admin.modalities.destroy                        
+|  OK    | PUT|PATCH | admin/modalities/{modality}                                         | admin.modalities.update                         
+|  OK    | GET|HEAD  | admin/modalities/{modality}/edit                                    | admin.modalities.edit                           
+|  OK    | POST      | admin/notices                                                       | admin.notices.store                             
+|  OK    | GET|HEAD  | admin/notices                                                       | admin.notices.index                             
+|  OK    | GET|HEAD  | admin/notices/create                                                | admin.notices.create                            
+|  OK    | GET|HEAD  | admin/notices/{notice}                                              | admin.notices.show                              
+|  OK    | PUT|PATCH | admin/notices/{notice}                                              | admin.notices.update                            
+|  OK    | DELETE    | admin/notices/{notice}                                              | admin.notices.destroy                           
+|  OK    | GET|HEAD  | admin/notices/{notice}/edit                                         | admin.notices.edit                              
+|  OK    | POST      | admin/notices/{notice}/offers                                       | admin.notices.offers.store                      
+|  OK    | GET|HEAD  | admin/notices/{notice}/offers/create                                | admin.notices.offers.create                     
+|  OK    | PUT|PATCH | admin/notices/{notice}/offers/{offer}                               | admin.notices.offers.update                     
+|  OK    | GET|HEAD  | admin/notices/{notice}/offers/{offer}/edit                          | admin.notices.offers.edit                       
+|  OK    | GET|HEAD  | admin/users                                                         | admin.users.index                               
+|  OK    | POST      | admin/users                                                         | admin.users.store                               
+|  OK    | PUT|PATCH | admin/users/{user}                                                  | admin.users.update                              
+|  OK    | DELETE    | admin/users/{user}                                                  | admin.users.destroy                             
+|  OK    | GET|HEAD  | admin/users/{user}/edit                                             | admin.users.edit                                                                      
+|  OK    | POST      | candidate/notice/{notice}/offer/{offer}/subscription                | candidate.subscription.store                    
+|  OK    | GET|HEAD  | candidate/notice/{notice}/offer/{offer}/subscription/create         | candidate.subscription.create                   
+|  OK    | GET|HEAD  | candidate/subscription/{subscription}/ticket                        | candidate.subscription.show                     
+|  OK    | GET|HEAD  | dashboard                                                           | dashboard                                       
+|  OK    | GET|HEAD  | dev/single                                                          | dev.single                                      
+|  OK    | GET|HEAD  | dev/single_cards                                                    | dev.single                                      
+|  OK    | GET|HEAD  | dev/single_form                                                     | dev.single                                      
+|  OK    | GET|HEAD  | dev/single_table                                                    | dev.single                                      
+|  OK    | GET|HEAD  | forgot-password                                                     | password.request                                
+|  OK    | POST      | forgot-password                                                     | password.email                                  
+|  OK    | POST      | login                                                               |                                                 
+|  OK    | GET|HEAD  | login                                                               | login                                           
+|  OK    | POST      | logout                                                              | logout                                          
+|  OK    | GET|HEAD  | notice/{notice}                                                     | notice.show                                     
+|  OK    | POST      | register                                                            |                                                 
+|  OK    | GET|HEAD  | admin/notice/{notice}/mail-send                                     | admin.notices.mail-send.edit                    
+|  OK    | POST      | admin/notice/{notice}/mail-send                                     | admin.notices.mail-send.sender                  
+|  OK    | GET|HEAD  | admin/notices/{notice}/candidates-vacancies/report                  | admin.notices.candidatesForVacancies.report     
+|  OK    | GET|HEAD  | admin/notices/{notice}/contacts/report                              | admin.notices.contact.report                    
+|  OK    | PUT       | admin/notices/{notice}/distribute-lottery-number                    | admin.notices.distribute-lottery-number         
+|        | GET|HEAD  | api/user                                                            |                                                 
+|        | POST      | email/verification-notification                                     | verification.send                               
+|        | GET|HEAD  | email/verify                                                        | verification.notice                             
+|        | GET|HEAD  | email/verify/{id}/{hash}                                            | verification.verify                             
+|        | POST      | livewire/message/{name}                                             |                                                 
+|        | GET|HEAD  | livewire/preview-file/{filename}                                    | livewire.preview-file                           
+|        | POST      | livewire/upload-file                                                | livewire.upload-file                            
+|        | GET|HEAD  | reset-password/{token}                                              | password.reset                                  
+|        | GET|HEAD  | sanctum/csrf-cookie                                                 |                                 
+|        | POST      | two-factor-challenge                                                |                                                 
+|        | GET|HEAD  | two-factor-challenge                                                | two-factor.login                                
+|        | POST      | user/confirm-password                                               |                                                 
+|        | GET|HEAD  | user/confirm-password                                               | password.confirm                                
+|        | GET|HEAD  | user/confirmed-password-status                                      | password.confirmation
+|        | PUT       | user/contact                                                        | user.contact.update                             
+|        | GET|HEAD  | user/contact                                                        | user.contact.edit                               
+|        | PUT       | user/password                                                       | user-password.update                            
+|        | GET|HEAD  | user/profile                                                        | profile.show                                    
+|        | PUT       | user/profile-information                                            | user-profile-information.update                 
+|        | DELETE    | user/two-factor-authentication                                      |                                                 
+|        | POST      | user/two-factor-authentication                                      |                                                 
+|        | GET|HEAD  | user/two-factor-qr-code                                             |                                                 
+|        | GET|HEAD  | user/two-factor-recovery-codes                                      |                                                 
+|        | POST      | user/two-factor-recovery-codes                                      |                                                 
